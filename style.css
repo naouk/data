@@ -1,0 +1,278 @@
+*{
+  margin:0;
+  padding:0;
+  color:inherit;
+  text-decoration: none;
+  border:none;
+  font-family:'Open Sans', sans-serif;
+  font-weight:lighter;
+  line-height: 1.4em;
+  font-size:24px;
+}
+body{
+  margin-bottom:48px;
+}
+h1{
+  font-size: 96px;
+  line-height: 1.2em;
+}
+h2{ 
+  font-size: 56px;
+  margin-bottom:8px;
+}
+h3{ 
+  font-size: 32px;
+  margin-bottom:8px;
+}
+p{
+  font-size: 16px;
+  margin-bottom:8px;
+  max-width:800px;
+}
+select{
+  background:#fff;
+  border: 2px solid #ccc;
+  margin-bottom:16px;
+  color:#333;
+  -webkit-appearance:none;
+  padding:7px;
+  font-size:24px;
+}
+#date_display{
+}
+header{
+  background:#333;
+  color:white;
+  padding: 120px 64px;
+}
+header.small{
+  padding: 32px 64px;
+}
+header.small h1{
+  font-size:72px;
+  margin-bottom:24px;
+}
+header h3{
+  font-style: italic;
+}
+section{
+  padding: 64px;
+}
+section:nth-child(odd) {
+  background: #f5f5f5;
+}
+footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  box-sizing:border-box;
+  padding:16px;
+  background:#333333;
+  color:white;
+  text-align:right;
+}
+nav{
+  font-size: 0;
+}
+nav a.btn{
+  font-size: 16px;
+  margin-right:4px;
+  margin-bottom:4px;
+}
+nav a.btn:last-child{
+  margin-right: 0;
+}
+footer a{
+  color:rgb(79, 42, 175);
+}
+section.companies{
+  font-size:0;
+}
+section.company{
+  padding: 16px;
+  font-size: 16px;
+}
+a:first-child section.company{
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+a:last-child section.company{
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+a:nth-child(even) section.company{
+  background:#e0e0e0;
+}
+section.company.proved{
+  font-size:18px;
+  background:#ccc;
+}
+
+ul{
+  padding-left: 1.5em;
+}
+ul.news_sources,
+ul.companies{
+  padding-left: 0;
+}
+ul.news_sources li,
+ul.companies li{
+  list-style:none;
+}
+ul.news_sources li a,
+ul.companies li a{
+  display:block;
+  padding:8px;
+  background:#f5f5f5;
+  font-size:32px;
+}
+ul.news_sources li a:before,
+span.dot{
+  content: "";
+  border-radius:50%;
+  width:24px;
+  height:24px;
+  display:inline-block;
+}
+ul.news_sources li a.neutral_polarity:before,
+span.dot.neutral{
+  background:rgb(218, 177, 76);
+}
+ul.news_sources li a.positive_polarity:before,
+span.dot.positive{
+  background:rgb(76, 218, 87);
+}
+ul.news_sources li a.negative_polarity:before,
+span.dot.negative{
+  background:rgb(218, 116, 76);
+}
+ul.news_sources li:nth-child(even) a,
+ul.companies li:nth-child(even) a{
+  background:#ccc;
+}
+ul.companies li a span{
+  font-size:12px;
+  vertical-align: top;
+  color:red;
+}
+.red-text{
+  color:red;
+}
+.wrapper{
+  max-width:1600px;
+  margin: 0 auto;
+}
+.btn{
+  padding:8px;
+  font-size:24px;
+  background:#aaa;
+  cursor:pointer;
+  color:#333;
+  display:inline-block;
+  border-radius:4px;
+  transition:background 0.5s ease-out, color 0.5s ease-out;
+  outline:none;
+}
+.btn:hover{
+  background:#777;
+  color:white;
+}
+.btn:active{
+  background:#333;
+  color:white;
+}
+
+.text-right{
+  text-align: right;
+}
+
+textarea,
+input[type=text]{
+  padding:7px;
+  border: 1px solid #ccc;
+  border-radius:2px;
+  width:100%;
+  background:none;
+  box-sizing:border-box;
+  margin-bottom: 8px;
+  font-size:24px;
+}
+textarea{
+  min-height:128px;
+}
+
+@media all and (max-width:650px){
+  h1{
+    font-size:96px;
+  }
+  h2{
+    font-size:48px;
+  }
+  h3{
+    font-size:24px;
+  }
+  ul.news_sources li a,
+  ul.companies li a {
+    font-size:16px;
+  }
+  ul.news_sources li a:before,
+  span.dot{
+    width:16px;
+    height:16px;
+  }
+}
+@media all and (max-width:520px){
+  section{
+    padding:32px;
+  }
+  header{
+    padding:64px 32px;
+  }
+}
+@media all and (max-width:460px){
+  header.small h1,
+  h1{
+    font-size:64px;
+  }
+  h2{
+    font-size:28px;
+  }
+  .btn,
+  h3{
+    font-size:20px;
+  }
+
+  textarea,
+  input[type=text]{
+    font-size:16px;
+  }
+}
+@media all and (max-width:430px){
+  body{
+    margin-bottom:64px;
+  }
+}
+@media all and (max-width:400px){
+  header.small,
+  header{
+    padding:32px 16px;
+  }
+  section{
+    padding:16px;
+  }
+}
+@media all and (max-width:370px){
+  header.small h1,
+  h1{
+    font-size:48px;
+  }
+  h2{
+    font-size:24px;
+  }
+  .btn,
+  ul.companies li a,
+  h3{
+    font-size:16px;
+  }
+}

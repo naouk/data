@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Rail Travel grouped by date</title>
+</head>
+<body>
+  <header class="small">
+    <div class="wrapper">
+      <h1>Rail Travel grouped by date</h1>
+    </div>
+  </header>
+  <section>
+    <div class="wrapper">
+      <select id="dates">
+        <option>Pick a Date</option>
+      </select>
+      <div style="width:100%; height:600px" id="map"></div>
+    </div>
+  </section>
+  <script src="http://openlayers.org/api/OpenLayers.js"></script>
+  <script>
+    //window.data = <%# json %>;
+    // var add_options = function(select,data){
+    //   var select = select;
+    //   for (var key in data) {
+    //     var option = document.createElement('option');
+    //     option.value = key;
+    //     option.innerText = key;
+    //     select.appendChild(option);
+    //   }
+    // };
+    window.onload = function(){
+      //var select = document.getElementById('dates');
+      //add_options(select, window.data);
+      // select.addEventListener('change', function(event){
+      //   drawElements(event.currentTarget.value);
+      // }, false);
+      // var style = { 
+      //   strokeColor: '#7e3f4e', 
+      //   strokeOpacity: 1,
+      //   strokeWidth: 2,
+      //   fontColor: '#333'
+      // };
+      var map = new OpenLayers.Map('map');
+      map.zoomToMaxExtent();
+      // var lon = Math.random() * 360 - 180;
+      // var lat = Math.random() * 180 - 90;
+      // var lonlat = new OpenLayers.LonLat(lon, lat);
+      // var vectorlayer = new OpenLayers.Layer.Vector("VLayer");
+      // map.addLayer(vectorlayer);
+      // var lines = [];
+      // var drawElements = function(key){
+      //   var elements = data[key]
+      //   var lines = [];
+      //   vectorlayer.destroyFeatures();
+      //   elements.forEach(function(options){
+      //     lines.push(addLine(options, style));
+      //   });
+      //   vectorlayer.addFeatures(lines);
+      // };
+      // var addLine = function(options, style){
+      //   var mid_lat = (parseFloat(options.to_lat) + parseFloat(options.from_lat)) / 2;
+      //   var mid_lng = (parseFloat(options.to_lng) + parseFloat(options.from_lng)) / 2;
+      //   var points = new Array(
+      //      //new OpenLayers.Geometry.Point(parseFloat(options.from_lat), parseFloat(options.from_lng)),
+      //      new OpenLayers.Geometry.Point(options.from_lat, options.from_lng).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()),
+      //      new OpenLayers.Geometry.Point(mid_lat, mid_lng).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()),
+      //      //new OpenLayers.Geometry.Point(parseFloat(options.to_lat), parseFloat(options.to_lng))
+      //      new OpenLayers.Geometry.Point(options.to_lat, options.to_lng).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject())
+      //   );
+      //   var line = new OpenLayers.Geometry.LineString(points);
+      //   var lineFeature = new OpenLayers.Feature.Vector(line, null, style);
+      //   return lineFeature;
+      // };
+    };
+  </script>
+</body>
+</html>
