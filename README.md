@@ -1,5 +1,6 @@
+data
+====
 
-Mission Control
-===========
+Anders - uses Ruby/Sinatra and a series of .rb files for data munging.
 
-A Sinatra app designed to keep track of mission statements of companies and their social proofs. New Companies and News Items can be inserted via an authenticated API.
+use foreman to start the server.
