@@ -1,0 +1,651 @@
+
+<!DOCTYPE html><head>
+    <meta HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EmulateIE9" >
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Federal Budget Data Visualization D3.js</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/style.css">
+    <script type="text/javascript" src="lib/d3_3_1.js"></script>
+
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        _uacct = "UA-173014-2";
+        urchinTracker();
+    </script>
+
+</head>
+<style>
+    a:hover {
+        font-weight:bold;
+        color:#000000;
+    }
+</style>
+<body style="height:900px; width:1280px; overflow:auto">
+
+<div class="nytg-navBar" style="left:20px;">
+    <ul class="nytg-navigation clearfix" style="list-style-type:none">
+        <li id="federalButton" class="selected">External</li>
+        <li id="stateButton">Internal (inc EU)</li>
+        <li id="localButton">Total</li>
+    </ul>
+</div>
+
+<!-- Federal -> External, State -> EU, Local -> Internal -->
+<div id="footer" style="position:absolute; right:20px; top:15px;">
+    Budget
+    <div class="hint" style="font-style:italic">
+        
+        <br><br>
+        <div style="color:#000; font-style:normal">
+        by <a href="http://puntofisso.net">Giuseppe Sollazzo</a><br/>
+        based upon <a href="http://www.brightpointinc.com/project-list/" title="BrightPoint Consulting, Inc.">www.brightpointinc.com</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="body" style="position: absolute; top:80px">
+
+<div id="toolTip" class="tooltip" style="opacity:0;">
+    <div id="head" class="header"></div>
+    <div id="header1" class="header1"></div>
+    <div id="header2" class="header2"></div>
+    <div style="position:absolute; left:10px">
+        <div id="federalDiv" style="width:135px; left:0px; top:10px; position: absolute;" class="selected">
+            <div class="header3"><br>External Funds</div>
+            <div class="header-rule"></div>
+            <div id="fedSpend" class="header4"></div>
+        </div>
+        <div id="stateDiv" style="width:125px; left:140px; top:10px; position: absolute;">
+            <div class="header3"><br>Internal (inc EU Funds)</div>
+            <div class="header-rule"></div>
+            <div id="stateSpend" class="header4"></div>
+        </div>
+        <div id="localDiv" style="width:125px; left:272px; top:10px; position: absolute;">
+            <div class="header3"><br>Total Funds</div>
+            <div class="header-rule"></div>
+            <div id="localSpend" class="header4"></div>
+        </div>
+    </div>
+    <div  class="tooltipTail"></div>
+</div>
+
+ <script type="text/javascript">
+
+    var m = [20, 120, 20, 120],
+            w = 1280 - m[1] - m[3],
+            h = 900 - m[0] - m[2],
+            i = 0,
+            root = {};
+
+    var spendField="sum_Federal";
+    var actField="sum_Federal";
+    var sumFields=["Federal","GovXFer","State","Local"];
+    var sourceFields=["Category","Level1","Level2","Level3","Level4"];
+
+
+    var colors = ["#bd0026","#fecc5c", "#fd8d3c", "#f03b20", "#B02D5D",
+        "#9B2C67", "#982B9A", "#692DA7", "#5725AA", "#4823AF",
+        "#d7b5d8","#dd1c77","#5A0C7A","#5A0C7A"];
+
+    /*
+    var colors = ["#D5252F", "#E96B38", "#F47337", "#B02D5D",
+        "#9B2C67", "#982B9A", "#692DA7", "#5725AA", "#4823AF",
+        "#d7b5d8"," #df65b0","#dd1c77","#980043"];
+    */
+    var formatNumber = d3.format(",.3f");
+    var formatCurrency = function(d) { return "£" + formatNumber(d)};
+
+    var tree = d3.layout.tree();
+
+          tree.children(function (d) { return d.values; });
+          tree.size([h, w]);
+
+
+    var toolTip = d3.select(document.getElementById("toolTip"));
+    var header = d3.select(document.getElementById("head"));
+    var header1 = d3.select(document.getElementById("header1"));
+    var header2 = d3.select(document.getElementById("header2"));
+
+    var fedSpend = d3.select(document.getElementById("fedSpend"));
+
+    var stateSpend = d3.select(document.getElementById("stateSpend"));
+
+    var localSpend = d3.select(document.getElementById("localSpend"));
+
+    var federalButton=d3.select(document.getElementById("federalButton"));
+    var stateButton=d3.select(document.getElementById("stateButton"));
+    var localButton=d3.select(document.getElementById("localButton"));
+    var federalDiv=d3.select(document.getElementById("federalDiv"));
+    var stateDiv=d3.select(document.getElementById("stateDiv"));
+    var localDiv=d3.select(document.getElementById("localDiv"));
+
+
+    var diagonal = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]; });
+
+    var vis = d3.select("#body").append("svg:svg")
+            .attr("width", w + m[1] + m[3])
+            .attr("height", h + m[0] + m[2])
+            .append("svg:g")
+            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+    var level1Max={};
+    var level2Max={};
+    var level3Max={};
+    var level4Max={};
+
+    var level1Radius;
+    var level2Radius;
+    var level3Radius;
+    var level4Radius;
+
+    var alreadySummed=false;
+
+
+//http://www.usgovernmentspending.com/budget_gs.php
+
+    d3.csv("data/naobudget.csv", function(csv) {
+
+        //Category > Value Stream > Project > Production Order
+        var data=[];
+
+        //Remove all zero values nodes
+        csv.forEach(function (d) {
+            var t=0;
+            for (var i=0; i < sumFields.length; i++) {
+                t+= Number(d[sumFields[i]]);
+            }
+            if (t > 0) {
+                data.push(d);
+            } else {
+                // gsollazz
+                data.push(d);
+            }
+        })
+
+        var nest = d3.nest()
+                .key(function(d) { return d.Level1; })
+                .key(function(d) { return d.Level2; })
+                .key(function(d) { return d.Level3; })
+                .entries(data);
+
+        root={};
+        root.values=nest;
+        root.x0 = h / 2;
+        root.y0 = 0;
+
+        //rollup(root.values);
+
+        var nodes = tree.nodes(root).reverse();
+
+        tree.children(function (d){ return d.children;});
+
+        initialize();
+        setup();
+
+        alreadySummed=true;
+
+        // Initialize the display to show a few nodes.
+        root.values.forEach(toggleAll);
+        toggle(root.values[2]);
+
+        update(root);
+
+        stateButton.on("click",function (d) {
+            stateButton.attr("class","selected")
+            federalButton.attr("class",null);
+            localButton.attr("class",null);
+            stateDiv.attr("class","selected")
+            federalDiv.attr("class",null);
+            localDiv.attr("class",null);
+            spendField="sum_State";
+            actField="sum_State";
+            setup();
+            update(root);
+        });
+        localButton.on("click",function (d) {
+            localButton.attr("class","selected")
+            stateButton.attr("class",null);
+            federalButton.attr("class",null);
+            localDiv.attr("class","selected")
+            federalDiv.attr("class",null);
+            stateDiv.attr("class",null);
+            spendField="sum_Local";
+            actField="sum_Local";
+            setup();
+            update(root);
+        });
+        federalButton.on("click",function (d) {
+            federalButton.attr("class","selected")
+            stateButton.attr("class",null);
+            localButton.attr("class",null);
+            federalDiv.attr("class","selected")
+            stateDiv.attr("class",null);
+            localDiv.attr("class",null);
+            spendField="sum_Federal";
+            setup();
+            update(root);
+        });
+
+        function initialize(){
+
+            for (var i=0; i < sumFields.length; i++) {
+                level1Max["sum_" + sumFields[i]]=0;
+                level2Max["sum_" + sumFields[i]]=0;
+                level3Max["sum_" + sumFields[i]]=0;
+                level4Max["sum_" + sumFields[i]]=0;
+            }
+            sumNodes(root.children);
+        }
+
+        function setup() {
+
+            level1Radius=d3.scale.sqrt()
+                    .domain([0, level1Max[spendField]])
+                    .range([1,40]);
+
+            level2Radius=d3.scale.sqrt()
+                    .domain([0, level2Max[spendField]])
+                    .range([1,40]);
+
+            level3Radius=d3.scale.sqrt()
+                    .domain([0, level3Max[spendField]])
+                    .range([1,40]);
+
+            level4Radius=d3.scale.sqrt()
+                    .domain([0, level4Max[spendField]])
+                    .range([1,40]);
+
+        }
+
+
+
+
+
+
+        function toggleAll(d) {
+            if (d.values && d.values.actuals) {
+                d.values.actuals.forEach(toggleAll);
+                toggle(d);
+            }
+            else if (d.values) {
+                d.values.forEach(toggleAll);
+                toggle(d);
+            }
+        }
+
+
+    });
+
+    function setSourceFields(child,parent) {
+        if (parent) {
+            for (var i=0; i < sourceFields.length; i++) {
+                var sourceField=sourceFields[i];
+                if (child[sourceField] != undefined) {
+                    child["source_" + sourceField] = child[sourceField];
+                }
+                parent["source_" + sourceField] = (child["source_" + sourceField]) ? child["source_" + sourceField] : child[sourceField];
+            }
+        }
+
+    }
+
+    function sumNodes(nodes)  {
+        for (var y=0; y < nodes.length; y++) {
+            var node=nodes[y];
+            if (node.children) {
+                sumNodes(node.children);
+                for (var z=0; z < node.children.length; z++) {
+                    var child=node.children[z];
+                    for (var i=0; i < sumFields.length; i++) {
+                        if (isNaN(node["sum_" + sumFields[i]])) node["sum_" + sumFields[i]]=0;
+                        node["sum_" + sumFields[i]]+=Number(child["sum_" + sumFields[i]]);
+
+                        //Set scales;
+
+                        console.log("sum_" + sumFields[i] + " " + node["sum_"+sumFields[i]]);
+
+                        if ((node.parent)) {
+                            if (node.depth==1) {
+                                level1Max["sum_" + sumFields[i]]=Math.max(level1Max["sum_" + sumFields[i]],Number(node["sum_" + sumFields[i]]));
+                            }
+                            else if (node.depth==2) {
+                                level2Max["sum_" + sumFields[i]]=Math.max(level2Max["sum_" + sumFields[i]],Number(node["sum_" + sumFields[i]]));
+                            }
+                            else if (node.depth==3) {
+                                level3Max["sum_" + sumFields[i]]=Math.max(level3Max["sum_" + sumFields[i]],Number(node["sum_" + sumFields[i]]));
+                            }
+                            else if (node.depth==4) {
+                                level4Max["sum_" + sumFields[i]]=Math.max(level4Max["sum_" + sumFields[i]],Number(node["sum_" + sumFields[i]]));
+                            }
+                            setSourceFields(node,node.parent);
+                        }
+
+                    }
+                }
+            }
+            else {
+                for (var i=0; i < sumFields.length; i++) {
+                    node["sum_"+sumFields[i]]=Number(node[sumFields[i]]);
+                    if (isNaN(node["sum_"+sumFields[i]])) {
+                        node["sum_"+sumFields[i]] = 0;
+                    }
+                }
+            }
+            setSourceFields(node,node.parent);
+        }
+
+    }
+
+    function update(source) {
+
+        var duration = d3.event && d3.event.altKey ? 5000 : 500;
+
+        var nodes = tree.nodes(root).reverse();
+
+        var depthCounter=0;
+
+        // Normalize for fixed-depth.
+        nodes.forEach(function(d) {
+            d.y = d.depth * 180;
+            d.numChildren=(d.children) ? d.children.length : 0;
+
+            if (d.depth==1) {
+                d.linkColor=colors[(depthCounter % (colors.length-1))];
+                depthCounter++;
+            }
+
+            if (d.numChildren==0 && d._children) d.numChildren= d._children.length;
+
+        });
+
+        //Set link colors
+        nodes.forEach(function (d) {
+            var obj=d;
+
+            while ((obj.source && obj.source.depth > 1) || obj.depth > 1) {
+                obj=(obj.source) ? obj.source.parent : obj.parent;
+            }
+
+            d.linkColor=(obj.source) ? obj.source.linkColor : obj.linkColor;
+
+        });
+
+        // Update the nodes…
+        var node = vis.selectAll("g.node")
+                .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+        // Enter any new nodes at the parent's previous position.
+        var nodeEnter = node.enter().append("svg:g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";
+                })
+                .on("click", function(d) {
+                    if (d.numChildren > 200) {
+                        alert(d.key + " has too many departments (" + d.numChildren + ") to view at once.");
+                    }
+                    else {
+                        toggle(d);
+                        update(d);
+                    }
+                });
+
+        nodeEnter.append("svg:circle")
+                .attr("r", 1e-6)
+                .on("mouseover", function(d) { node_onMouseOver(d);})
+                .on("mouseout", function(d) {							// when the mouse leaves a circle, do the following
+                    toolTip.transition()									// declare the transition properties to fade-out the div
+                            .duration(500)									// it shall take 500ms
+                            .style("opacity", "0");							// and go all the way to an opacity of nil
+                })
+                .style("fill", function(d) { return d.source ? d.source.linkColor: d.linkColor;
+                })
+                .style("fill-opacity", ".8")
+                .style("stroke", function(d) { return d.source ? d.source.linkColor: d.linkColor;
+                    });
+
+
+        nodeEnter.append("svg:text")
+                .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+                .attr("dy", ".35em")
+                .attr("text-anchor",
+                function(d) {
+                    return d.children || d._children ? "end" : "start";
+                })
+                .text(function(d) {
+                    var ret= (d.depth==4) ? d.Level4 : d.key;
+                    ret = (String(ret).length > 25) ? String(ret).substr(0,22)  + "..." : ret;
+                    return ret;
+                })
+                .on("mouseover", function(d) { node_onMouseOver(d);})
+                .on("mouseout", function(d) {							// when the mouse leaves a circle, do the following
+                    toolTip.transition()									// declare the transition properties to fade-out the div
+                            .duration(500)									// it shall take 500ms
+                            .style("opacity", "0");							// and go all the way to an opacity of nil
+                })
+                .style("fill-opacity", "0");
+
+        // Transition nodes to their new position.
+        var nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + d.y + "," + d.x + ")";
+                });
+
+        nodeUpdate.select("circle")
+                .attr("r", function (d) {
+
+                        if (d.depth==0) {
+                            return 10;
+                        }
+                        else if (d.depth==1) {
+                            var ret = level1Radius(d[spendField]);
+                            return (isNaN(ret) ? 2 : ret);
+                        }
+                        else if (d.depth==2) {
+                            var ret = level2Radius(d[spendField]);
+                            return (isNaN(ret) ? 2 : ret);
+                        }
+                        else if (d.depth==3) {
+                            var ret = level3Radius(d[spendField]);
+                            return (isNaN(ret) ? 2 : ret);
+                        }
+                        else if (d.depth==4) {
+                            var ret = level4Radius(d[spendField]);
+                            return (isNaN(ret) ? 2 : ret);
+                        }
+
+                })
+                .style("fill", function(d) { return d.source ? d.source.linkColor: d.linkColor})
+                .style("fill-opacity",  function(d) {
+                    var ret = ((d.depth+1)/5);
+                    return ret; });
+
+
+
+
+        nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+
+        // Transition exiting nodes to the parent's new position.
+        var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + source.y + "," + source.x + ")";
+                })
+                .remove();
+
+        nodeExit.select("circle")
+                .attr("r", 1e-6);
+
+        nodeExit.select("text")
+                .style("fill-opacity", 1e-6);
+
+        // Update the links…
+        var link = vis.selectAll("path.link")
+                .data(tree.links(nodes), function(d) {
+                    return d.target.id;
+                });
+
+        var rootCounter=0;
+
+        // Enter any new links at the parent's previous position.
+        link.enter().insert("svg:path", "g")
+                .attr("class", "link")
+                .attr("d", function(d) {
+                    if (Number(d.target[spendField]) > 0) {
+                        var o = {x: source.x0, y: source.y0};
+                        return diagonal({source: o, target: o});
+                    }
+                    else {
+                        null;
+                    }
+                })
+                .style("stroke",function (d,i) {
+                    if (d.source.depth==0) {
+                        rootCounter++;
+                        return (d.source.children[rootCounter-1].linkColor);
+                    }
+                    else {
+                        return (d.source) ? d.source.linkColor : d.linkColor;
+                    }
+                })
+                .style("stroke-width", function (d,i) {
+
+                    if (d.source.depth==0) {
+                        var ret = level1Radius(d.target[spendField]) * 2;
+                        return (isNaN(ret) ? 4 : ret);
+                    }
+                    else if (d.source.depth==1) {
+                        var ret = level2Radius(d.target[spendField]) * 2;
+                        return (isNaN(ret) ? 4 : ret);
+                    }
+                    else if (d.source.depth==2) {
+                        var ret = level3Radius(d.target[spendField]) * 2;
+                        return (isNaN(ret) ? 4 : ret);
+                    }
+                    else if (d.source.depth==3) {
+                        var ret = level4Radius(d.target[spendField]) * 2;
+                        return (isNaN(ret) ? 4 : ret);
+                    }
+                 })
+                .style("stroke-opacity", function(d){
+                    var ret = ((d.source.depth+1)/4.5)
+                    if (d.target[spendField] <= 0) ret=.1;
+                    return ret;
+                })
+                .style("stroke-linecap","round")
+                .transition()
+                .duration(duration);
+          //      .attr("d", diagonal);
+
+
+        // Transition links to their new position.
+         var linkUpdate = link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+
+         linkUpdate
+                 .style("stroke-width", function (d,i) {
+                     if (d.source.depth==0) {
+                         var ret = level1Radius(Number(d.target[spendField])) * 2;
+                         return (isNaN(ret) ? 4 : ret);
+                     }
+                     else if (d.source.depth==1) {
+                         var ret = level2Radius(Number(d.target[spendField])) * 2;
+                         return (isNaN(ret) ? 4 : ret);
+                     }
+                     else if (d.source.depth==2) {
+                         var ret = level3Radius(Number(d.target[spendField])) * 2;
+                         return (isNaN(ret) ? 4 : ret);
+                     }
+                     else if (d.source.depth==3) {
+                         var ret = level4Radius(Number(d.target[spendField])) * 2;
+                         return (isNaN(ret) ? 4 : ret);
+                     }
+                })
+             //    .style("stroke-dasharray", function(d) {
+             //       var ret=(d.target[spendField] > 0) ? "" : "5,8";
+             //       return ret;
+             //    })
+                 .style("stroke-opacity", function(d){
+                     var ret = ((d.source.depth+1)/4.5)
+                     if (d.target[spendField] <= 0) ret=.1;
+                     return ret;
+                 })
+
+
+        // Transition exiting nodes to the parent's new position.
+        link.exit().transition()
+                .duration(duration)
+                .attr("d", diagonal)
+                .remove();
+
+        // Stash the old positions for transition.
+        nodes.forEach(function(d) {
+            d.x0 = d.x;
+            d.y0 = d.y;
+        });
+
+
+        function node_onMouseOver(d) {
+            toolTip.transition()
+                    .duration(200)
+                    .style("opacity", ".9");
+            header.text(d["source_Level1"]);
+            header1.text((d.depth > 1) ? d["source_Level2"] : "");
+            header2.html((d.depth > 2) ? d["source_Level3"] : "");
+            if (d.depth > 3) header2.html(header2.html() + " - "  + d["source_Level4"]);
+
+            fedSpend.text(formatCurrency(d["sum_Federal"]));
+
+            stateSpend.text(formatCurrency(d["sum_State"]));
+
+            localSpend.text(formatCurrency(d["sum_Local"]));
+
+            toolTip.style("left", (d3.event.pageX+15) + "px")
+                    .style("top", (d3.event.pageY-75) + "px");
+        }
+
+
+
+
+    }
+
+
+    function toggleButton(button) {
+        button.attr("class","selected");
+        if (button == federalButton) {
+            localButton.attr("class","unselected");
+            stateButton.attr("class","unselected");
+        }
+        else if (button == stateButton) {
+            localButton.attr("class","unselected");
+            federalButton.attr("class","unselected");
+        }
+        else {
+            federalButton.attr("class","unselected");
+            stateButton.attr("class","unselected");
+        }
+    }
+
+
+        // Toggle children.
+    function toggle(d) {
+        if (d.children) {
+            d._children = d.children;
+            d.children = null;
+        } else {
+            d.children = d._children;
+            d._children = null;
+        }
+    }
+
+
+</script>
+
+
+
+</body></html>
