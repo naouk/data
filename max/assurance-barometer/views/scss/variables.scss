@@ -1,0 +1,132 @@
+// Sizing
+// -------------------------
+
+$base-font-size:    18px!default;
+$base-line-height:  26px!default;
+
+$giga-size:         82px!default;
+$mega-size:         72px!default;
+$kilo-size:         48px!default;
+
+$h1-size:           46px!default; // .alpha
+$h2-size:           37px!default; // .beta
+$h3-size:           28px!default; // .gamma
+$h4-size:           24px!default; // .delta
+$h5-size:           20px!default; // .epsilon
+$h6-size:           18px!default; // .zeta
+
+$milli-size:        12px!default;
+$micro-size:        10px!default;
+
+// Colours
+// -------------------------
+
+$base-background-color: #fff;
+
+$grey-darker:             #1c1c1c;
+$grey-dark:               #333333;
+$grey-medium:             #616161;
+$grey-lowlight:           #cccccc;
+$grey-light:              #e8e8e8;
+$grey-lightest:           #f7f7f7;
+
+$blue-medium:             #1082c2;
+$blue-dark:               #0c699d;
+$blue-brand:              $blue-medium;
+$blue-darker-highlight:   #0e537a;
+
+
+$green-creation:          #5ab233;
+$green-success:           #74ab5b;
+
+$red-error:               #df4e4e;
+$red-darker-highlight:    #a82d2d;
+
+$grayHighlight:       #727272;
+
+
+$text-colour:         #333;
+$btnDefaultColor:     #ccc;
+
+
+$brandRed:            rgb(230, 0, 0);
+$brandTurquoise:      #2388af;
+
+
+
+$alert-red:           #df4e4e;
+$alert-blue:          #3f95c6;
+
+
+// Spacing
+// -------------------------
+
+$contentBlockMargin: 60px;
+$defaultBlockMargin: $contentBlockMargin;
+
+$base-spacing-unit: $base-line-height !default;
+$half-spacing-unit: $base-spacing-unit / 2 !default;
+$line-height-ratio: $base-line-height / $base-font-size;
+
+// Typography
+// -------------------------
+$sans-font-family:      helvetica, sans-serif !default;
+$plainFontFamily:       helvetica, sans-serif !default;
+$serifFontFamily:       Georgia, "Times New Roman", Times, serif !default;
+$monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace !default;
+
+$base-font-family:      $sans-font-family;
+
+//$baseFontSize:          18px !default;
+$baseFontFamily:        $sans-font-family !default;
+$base-font-family:      $sans-font-family !default;
+$number-font-family:    "proxima-nova", "freight-sans-pro", "FreightSans Pro", helvetica, sans-serif !default;
+$number-font-weight:    300 !default;
+$altFontFamily:         $serifFontFamily !default;
+
+// Styling
+// -------------------------
+
+$base-border-radius:    3px;
+
+// Z-Indexes
+// -------------------------
+
+$zindex-story-editor-container:         100 !default;
+
+$zindex-dropdown:         1000 !default;
+$zindexPopover:           1010 !default;
+$zindexTooltip:           1030 !default;
+$zindexFixedNavbar:       1030 !default;
+$zindexModalBackdrop:     1040 !default;
+$zindexModal:             1050 !default;
+
+$zindex-guiders-overlay:        1060 !default;
+$zindex-guiders-guider:         1070 !default;
+$zindex-guiders-arrow:          1080 !default;
+$zindex-guiders-highlight:      1090 !default; // This should be at the top of the stack.
+
+
+// Widths
+// --------------------------
+
+$one-quarter: 23.076923076923077%;
+$one-half: 48.717948717948715%;
+$one-third: 31.62393162393162%;
+$two-thirds: 65.8119658119658%;
+$three-quarters: 74.35897435897436%;
+$sixty: 57.26495726495726%;
+$forty: 40.17094017094017%;
+$gutter: 2.564102564%;
+
+// Viewports
+// --------------------------
+
+$xs-min:          480px;
+$sm-min:          768px;
+$md-min:          992px;
+$lg-min:          1200px;
+
+$xs-max:          ($sm-min - 1);
+$sm-max:          ($md-min - 1);
+$md-max:          ($lg-min - 1);

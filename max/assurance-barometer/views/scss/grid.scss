@@ -1,0 +1,139 @@
+.container {
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+
+  .one-half,
+  .one-third,
+  .two-thirds,
+  .one-quarter,
+  .one-sixth,
+  .five-sixths,
+  .sixty,
+  .forty {
+    width: 100%;
+    display: block;
+    margin-bottom: ($base-line-height * 2);
+    font-size: $base-font-size;
+    vertical-align: top;
+
+    &.tight {
+      margin-bottom: 0;
+    }
+    
+  }
+
+  @media all and (min-width: $md-min) {
+    
+    .one-half {
+      width: $one-half;
+      display: inline-block;
+      margin-left: $gutter;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
+
+    .one-third {
+
+      font-size: 17px;
+      display: inline-block;
+      width: $one-third;
+      margin-left: $gutter;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
+
+    .sixty {
+      
+      font-size: 17px;
+      display: inline-block;
+      width: $sixty;
+      margin-left: $gutter;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+    .forty {
+
+      font-size: 17px;
+      display: inline-block;
+      width: $forty;
+      margin-left: $gutter;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+    .two-thirds {
+      
+      width: $two-thirds;
+      margin-left: $gutter;
+      display: inline-block;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
+
+    .one-quarter {
+
+      width: 23.076923076923077%;
+      margin-left: $gutter;
+      display: inline-block;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+    .one-sixth {
+
+      width: 14.529914529914532%;
+      margin-left: $gutter;
+      display: inline-block;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+    .five-sixths {
+
+      width: 82.90598290598291%;
+      margin-left: $gutter;
+      display: inline-block;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+
+    .three-quarters {
+
+      width: $three-quarters;
+      margin-left: $gutter;
+      display: inline-block;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+    }
+
+  }
+}

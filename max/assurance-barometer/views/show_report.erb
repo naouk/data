@@ -1,0 +1,160 @@
+<div class="container">
+  <div class="logo">
+    <img src="https://dl.dropboxusercontent.com/u/29482823/icon_1841.png" class="barometer-icon" />
+  </div>
+  <h1>
+    Assurance Barometer
+  </h1>
+  <h3 class="reports-headline">
+    There were 
+    <%= number_with_delimiter(@report.total_projects) %> projects listed.
+  </h3>
+  <p class="toggler headline-total">
+    <span class="middleweight"><%= @report.number_of_moved_dates %></span> of these had their target date moved.
+  </p>
+  <p class="togglee hide">
+    <table class="tablesorter sortable-table">
+      <thead>
+        <tr>
+          <th>
+            Project Name
+          </th>
+          <th>
+            Financial Year
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @report.moved_projects.each do |p| %>
+          <tr>
+            <td>
+              <%= p[0] %>
+            </td>
+            <td>
+              <%= p[4] %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </p>
+  <p class="toggler headline-total">
+    <span class="middleweight"><%= @report.number_of_missed_planned %></span> of these missed their planned date.
+  </p>
+  <p class="togglee hide">
+    <table class="tablesorter sortable-table">
+      <thead>
+        <tr>
+          <th>
+            Project Name
+          </th>
+          <th>
+            Financial Year
+          </th>
+          <th>
+            Missed it by <i>that</i> much. (days)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @report.missed_planned_projects.each do |p| %>
+          <tr>
+            <td>
+              <%= p[0] %>
+            </td>
+            <td>
+              <%= p[4] %>
+            </td>
+            <td>
+              <p class="tooltip-me" title="Planned Date: <%= p[2] %>, Actual Date: <%= p[1] %>" alt="Planned Date: <%= p[2] %>, Actual Date: <%= p[1] %>" data-toggle="tooltip" data-placement="top" data-trigger="hover" style="margin-bottom: 0;">
+                <%= p[6] %>
+              </p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </p>
+  <p class="toggler headline-total">
+    <span class="middleweight"><%= @report.number_of_missed_targets %></span> of these missed their target date.
+  </p>
+  <p class="togglee hide">
+    <table class="tablesorter sortable-table">
+      <thead>
+        <tr>
+          <th>
+            Project Name
+          </th>
+          <th>
+            Financial Year
+          </th>
+          <th>
+            Missed it by <i>that</i> much. (days)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @report.missed_target_projects.each do |p| %>
+          <tr>
+            <td>
+              <%= p[0] %>
+            </td>
+            <td>
+              <%= p[4] %>
+            </td>
+            <td>
+              <p class="tooltip-me" title="Target Date: <%= p[3] %>, Actual Date: <%= p[1] %>" alt="Target Date: <%= p[3] %>, Actual Date: <%= p[1] %>" data-toggle="tooltip" data-placement="top" data-trigger="hover" style="margin-bottom: 0;">
+                <%= p[7] %>
+              </p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </p>
+  <p class="toggler headline-total">
+    How many days from 1st April did each project get certified?
+  </p>
+  <p class="togglee hide">
+    <table class="tablesorter sortable-table">
+      <thead>
+        <tr>
+          <th>
+            Project Name
+          </th>
+          <th>
+            Financial Year
+          </th>
+          <th>
+            Year Start
+          </th>
+          <th>
+            It took this many days!
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @report.completed_projects.each do |p| %>
+          <tr>
+            <td>
+              <%= p[0] %>
+            </td>
+            <td>
+              <%= p[4] %>
+            </td>
+            <td>
+              <%= p[5] %>
+            </td>
+            <td>
+              <p class="tooltip-me" title="Year Start: <%= p[5] %>, Certification Date: <%= p[1] %>" alt="Year Start: <%= p[5] %>, Certification Date: <%= p[1] %>" data-toggle="tooltip" data-placement="top" data-trigger="hover" style="margin-bottom: 0;">
+                <%= p[8] %>
+              </p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </p>
+</div>
+
+

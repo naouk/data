@@ -1,0 +1,49 @@
+
+.container {
+
+  @include clearfix();
+
+  @media only screen and (max-width:$xs-max){
+
+      width: 93.33333332%;
+      margin-right: auto;
+      margin-left: auto;
+      float: none;
+
+  }
+
+  // s-Prefix Grid
+  @media only screen and (min-width:$sm-min) and (max-width:$sm-max) {
+
+      width: 80%;
+      margin-right: auto;
+      margin-left: auto;
+      float: none;
+    
+  }
+
+  // t-Prefix Grid
+  @media only screen and (min-width:$md-min) and (max-width:$md-max) {
+
+      width: 92.18750002%;
+      margin-right: auto;
+      margin-left: auto;
+      float: none;
+
+  }
+
+  // db-Prefix Grid
+  @media only screen and (min-width:$lg-min) {
+    
+      width: 90.858585859%;
+      margin-right: auto;
+      margin-left: auto;
+      float: none;
+      max-width: 1170px;
+    
+  }
+
+  &.nested {
+    width: 100%;
+  }
+}

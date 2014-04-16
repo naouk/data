@@ -1,0 +1,97 @@
+// Type
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  line-height: 1.2em;
+  margin-top: 0;
+  margin-bottom: $half-spacing-unit;
+}
+
+h1,.alpha{
+  font-size: $h1-size;
+  line-height: 1.2em;
+}
+h2,.beta{
+  font-size: $h2-size;
+  line-height: 1.2em;
+}
+h3,.gamma{
+  font-size: $h3-size;
+  line-height: 1.2em;
+}
+h4,.delta{
+  font-size: $h4-size;
+  line-height: 1.2em;
+}
+h5,.epsilon{
+  font-size: $h5-size;
+  line-height: 1.2em;
+}
+h6,.zeta{
+  font-size: $h6-size;
+  line-height: 1.2em;
+}
+
+h3, h4, h5, h6 {
+  font-weight: 400;
+}
+
+.featherweight {
+  font-weight: 200;
+}
+
+.lightweight {
+  font-weight: 300;
+}
+
+.middleweight {
+  font-weight: 400;
+}
+
+.welterweight {
+  font-weight: 500;
+}
+
+p {
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+  margin: 0 0 $base-line-height 0;
+}
+
+/**
+ * A series of classes for setting massive type; for use in heroes, mastheads,
+ * promos, etc.
+ */
+.giga{
+    font-size: $giga-size;
+}
+.mega{
+    font-size: $mega-size;
+}
+.kilo{
+    font-size: $kilo-size;
+}
+
+.number {
+  font-family: $number-font-family;
+  font-weight: $number-font-weight;
+}
+
+.text-center,
+.text-centre {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+li {
+  // As we set font-size: 0 often to prevent whitespace bug,
+  // set these elements back to our default.
+  font-size: $base-font-size;
+}

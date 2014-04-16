@@ -1,0 +1,60 @@
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+  margin-top: 40px;
+}
+
+h1 {
+  font-weight: 200;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+$barometer-blue: rgb(50, 119, 173);
+
+.reports-headline {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.headline-total {
+  font-size: 38px;
+  line-height: 1.2em;
+  color: $barometer-blue;
+}
+
+.logo {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.barometer-icon {
+  width: 150px;
+  display: inline-block;
+}
+
+.tablesorter {
+
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    cursor: pointer;
+    text-align: left;
+    background-color: rgba(0,0,0,0.04);
+  }
+
+  th, td {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    border: 1px solid rgba(0,0,0,0.06);
+    padding: 12px;
+  }
+
+}
