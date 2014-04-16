@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyText
+  audited_body_id: 1
+  planned_date: 2014-03-27
+  target_date: 2014-03-27
+  actual_date: 2014-03-27
+  data_quality: MyText
+
+two:
+  name: MyText
+  audited_body_id: 1
+  planned_date: 2014-03-27
+  target_date: 2014-03-27
+  actual_date: 2014-03-27
+  data_quality: MyText
